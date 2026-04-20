@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактировать | ФЕНИКС</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background-image: url('/static/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height:100vh;
+            padding:20px;
+            position:relative;
+        }
+        body::before{
+            content:'';
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:rgba(0,0,0,0.65);
+            z-index:0;
+        }
+        .container{max-width:600px;margin:0 auto;position:relative;z-index:1}
+        .nav{background:rgba(20,25,40,0.9);padding:12px 20px;border-radius:60px;margin-bottom:20px;display:flex;gap:10px}
+        .nav a{color:#d0d0e0;text-decoration:none;padding:6px 16px;border-radius:30px}
+        .nav a:hover{background:#ff8c00;color:#0a0f1a}
+        .card{background:rgba(20,25,40,0.95);border-radius:20px;padding:25px;border:1px solid rgba(255,140,0,0.2);backdrop-filter:blur(5px)}
+        h2{color:#ff8c00;margin-bottom:20px}
+        .info{background:rgba(255,140,0,0.1);padding:10px;border-radius:10px;margin-bottom:15px;color:#ffaa44}
+        select,button{width:100%;padding:10px;margin:8px 0;border-radius:10px;background:rgba(10,15,25,0.8);border:2px solid rgba(255,140,0,0.3);color:white}
+        button{background:linear-gradient(135deg,#ff8c00,#ff4500);border:none;cursor:pointer;font-weight:600}
+        .checkbox{width:auto;margin-right:8px}
+        hr{margin:15px 0;border-color:rgba(255,140,0,0.2)}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav"><a href="/chat">💬 Чат</a><a href="/users">👥 Управление</a><a href="/logout">🚪 Выход</a></div>
+        <div class="card">
+            <h2>✏️ Редактирование</h2>
+            <div class="info"><strong>{{ user[1] }}</strong> — {{ user[2] }}</div>
+            <form method="post">
+                <input name="nickname" placeholder="Позывной" value="{{ user[6] }}">
+                
+                <select name="rank">
+                    <option value="Руководитель" {% if user[3]=='Руководитель' %}selected{% endif %}>👑 Руководитель</option>
+                    <option value="Начальник штаба" {% if user[3]=='Начальник штаба' %}selected{% endif %}>⭐ Начальник штаба</option>
+                    <option value="Командир отряда" {% if user[3]=='Командир отряда' %}selected{% endif %}>🎖️ Командир отряда</option>
+                    <option value="Командир отделения" {% if user[3]=='Командир отделения' %}selected{% endif %}>📌 Командир отделения</option>
+                    <option value="Рядовой" {% if user[3]=='Рядовой' %}selected{% endif %}>🪖 Рядовой</option>
+                </select>
+                
+                <select name="unit">
+                    <option value="Без отделения" {% if user[4]=='Без отделения' %}selected{% endif %}>🚫 Без отделения</option>
+                    <option value="1 отделение" {% if user[4]=='1 отделение' %}selected{% endif %}>1 отделение</option>
+                    <option value="2 отделение" {% if user[4]=='2 отделение' %}selected{% endif %}>2 отделение</option>
+                    <option value="3 отделение" {% if user[4]=='3 отделение' %}selected{% endif %}>3 отделение</option>
+                </select>
+                
+                <hr>
+                <h3 style="color:#ffaa44">Права:</h3>
+                <label><input type="checkbox" name="can_chat_write" {% if user[8] %}checked{% endif %} class="checkbox"> Писать в чат</label><br>
+                <label><input type="checkbox" name="can_view_all_reprimands" {% if user[9] %}checked{% endif %} class="checkbox"> Видеть выговоры всех</label><br>
+                <label><input type="checkbox" name="can_issue_reprimands" {% if user[10] %}checked{% endif %} class="checkbox"> Объявлять выговоры</label><br>
+                <label><input type="checkbox" name="can_view_all_lateness" {% if user[11] %}checked{% endif %} class="checkbox"> Видеть опоздания всех</label><br>
+                <label><input type="checkbox" name="can_manage_users" {% if user[12] %}checked{% endif %} class="checkbox"> Управлять пользователями</label><br>
+                <label><input type="checkbox" name="can_change_unit" {% if user[13] %}checked{% endif %} class="checkbox"> Менять отделение</label><br>
+                <label><input type="checkbox" name="can_manage_flag" {% if user[14] %}checked{% endif %} class="checkbox"> 🎌 Управлять флагом</label><br>
+                <label><input type="checkbox" name="can_manage_schedule" {% if user[15] %}checked{% endif %} class="checkbox"> 📚 Управлять занятиями</label><br>
+                
+                <button type="submit">💾 Сохранить</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

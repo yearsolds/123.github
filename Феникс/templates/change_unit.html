@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Смена отделения | ФЕНИКС</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background-image: url('/static/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height:100vh;
+            padding:20px;
+            position:relative;
+        }
+        body::before{
+            content:'';
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:rgba(0,0,0,0.65);
+            z-index:0;
+        }
+        .container{max-width:1000px;margin:0 auto;position:relative;z-index:1}
+        .nav{background:rgba(20,25,40,0.9);padding:12px 20px;border-radius:60px;margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap}
+        .nav a{color:#d0d0e0;text-decoration:none;padding:6px 16px;border-radius:30px}
+        .nav a:hover{background:#ff8c00;color:#0a0f1a}
+        .card{background:rgba(20,25,40,0.95);border-radius:20px;padding:25px;border:1px solid rgba(255,140,0,0.2);margin-bottom:20px;backdrop-filter:blur(5px)}
+        h2{color:#ff8c00;margin-bottom:20px}
+        h3{color:#ff8c00;margin:20px 0 15px}
+        select,button{padding:8px 14px;border-radius:10px;background:rgba(10,15,25,0.8);border:2px solid rgba(255,140,0,0.3);color:white;margin:5px}
+        button{background:linear-gradient(135deg,#ff8c00,#ff4500);border:none;cursor:pointer;font-weight:600}
+        .unit-block{display:inline-block;width:23%;vertical-align:top;margin-right:2%;background:rgba(10,15,25,0.5);padding:15px;border-radius:16px}
+        .unit-block h4{color:#ff8c00;font-size:16px;margin-bottom:12px;border-left:3px solid #ff8c00;padding-left:12px}
+        .unit-block li{padding:8px 0;border-bottom:1px solid rgba(255,140,0,0.2);color:#ffaa44}
+        .unit-block li:hover{color:#ff8c00;background:rgba(255,140,0,0.1);padding-left:8px;transition:0.2s}
+        ul{list-style:none;padding-left:0}
+        @media(max-width:768px){.unit-block{width:100%;margin-bottom:15px}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/chat">💬 Чат</a>
+            <a href="/reprimands">⚠️ Выговоры</a>
+            <a href="/lateness">⏰ Опоздания</a>
+            <a href="/flag_duty">🎌 Флаг</a>
+            <a href="/schedule">📚 Занятия</a>
+            <a href="/profile">👤 Профиль</a>
+            {% if session.can_manage_users %}<a href="/users">👥 Управление</a>{% endif %}
+            <a href="/change_unit">🔄 Отделение</a>
+            <a href="/logout">🚪 Выход</a>
+        </div>
+
+        <div class="card">
+            <h2>🔄 Смена отделения</h2>
+            <form method="post">
+                <select name="user_id" required>
+                    <option value="">— Выберите бойца —</option>
+                    {% for u in users %}
+                    <option value="{{ u[0] }}">{{ u[2] }} {{ u[1] }} {% if u[4] %}({{ u[4] }}){% endif %} — {{ u[3] }}</option>
+                    {% endfor %}
+                </select>
+                <select name="new_unit" required>
+                    <option value="">— Новое отделение —</option>
+                    <option value="Без отделения">🚫 Без отделения</option>
+                    <option value="1 отделение">1 отделение</option>
+                    <option value="2 отделение">2 отделение</option>
+                    <option value="3 отделение">3 отделение</option>
+                </select>
+                <button type="submit">🔄 Перевести</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>📋 Текущий состав</h2>
+            <div class="unit-block">
+                <h4>🚫 Без отделения</h4>
+                <ul>{% for u in users if u[3]=='Без отделения' %}<li>🎖️ {{ u[2] }} {{ u[1] }} {% if u[4] %}({{ u[4] }}){% endif %}</li>{% else %}<li style="color:#606070">— нет —</li>{% endfor %}</ul>
+            </div>
+            <div class="unit-block">
+                <h4>📌 1 отделение</h4>
+                <ul>{% for u in users if u[3]=='1 отделение' %}<li>🎖️ {{ u[2] }} {{ u[1] }} {% if u[4] %}({{ u[4] }}){% endif %}</li>{% else %}<li style="color:#606070">— нет —</li>{% endfor %}</ul>
+            </div>
+            <div class="unit-block">
+                <h4>📌 2 отделение</h4>
+                <ul>{% for u in users if u[3]=='2 отделение' %}<li>🎖️ {{ u[2] }} {{ u[1] }} {% if u[4] %}({{ u[4] }}){% endif %}</li>{% else %}<li style="color:#606070">— нет —</li>{% endfor %}</ul>
+            </div>
+            <div class="unit-block">
+                <h4>📌 3 отделение</h4>
+                <ul>{% for u in users if u[3]=='3 отделение' %}<li>🎖️ {{ u[2] }} {{ u[1] }} {% if u[4] %}({{ u[4] }}){% endif %}</li>{% else %}<li style="color:#606070">— нет —</li>{% endfor %}</ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

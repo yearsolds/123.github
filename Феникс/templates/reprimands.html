@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выговоры | ФЕНИКС</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background-image: url('/static/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height:100vh;
+            padding:20px;
+            position:relative;
+        }
+        body::before{
+            content:'';
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:rgba(0,0,0,0.65);
+            z-index:0;
+        }
+        .container{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+        .nav{background:rgba(20,25,40,0.9);padding:12px 20px;border-radius:60px;margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap}
+        .nav a{color:#d0d0e0;text-decoration:none;padding:6px 16px;border-radius:30px}
+        .nav a:hover{background:#ff8c00;color:#0a0f1a}
+        .card{background:rgba(20,25,40,0.95);border-radius:20px;padding:25px;border:1px solid rgba(255,140,0,0.2);backdrop-filter:blur(5px)}
+        h2{color:#ff8c00;font-size:24px;margin-bottom:20px;border-left:4px solid #ff8c00;padding-left:15px}
+        .form-add{background:rgba(255,140,0,0.05);padding:20px;border-radius:16px;margin-bottom:20px}
+        select,input,button{padding:8px 14px;border-radius:10px;background:rgba(10,15,25,0.8);border:2px solid rgba(255,140,0,0.3);color:white;margin:5px}
+        button{background:linear-gradient(135deg,#ff8c00,#ff4500);border:none;cursor:pointer;font-weight:600}
+        table{width:100%;border-collapse:collapse}
+        th{background:rgba(255,140,0,0.15);color:#ff8c00;padding:10px;text-align:left}
+        td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.05);color:#d0d0e0}
+        tr:hover{background:rgba(255,140,0,0.05)}
+        .empty{text-align:center;color:#606070;padding:20px}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/chat">💬 Чат</a>
+            <a href="/reprimands">⚠️ Выговоры</a>
+            <a href="/lateness">⏰ Опоздания</a>
+            <a href="/flag_duty">🎌 Флаг</a>
+            <a href="/schedule">📚 Занятия</a>
+            <a href="/profile">👤 Профиль</a>
+            {% if session.can_manage_users %}<a href="/users">👥 Управление</a>{% endif %}
+            <a href="/logout">🚪 Выход</a>
+        </div>
+        <div class="card">
+            <h2>⚠️ Журнал выговоров</h2>
+            {% if can_issue %}
+            <div class="form-add">
+                <form method="post" action="/add_reprimand">
+                    <select name="user_id" required>
+                        <option value="">— Выберите бойца —</option>
+                        {% for s in soldiers %}
+                        <option value="{{ s[0] }}">{{ s[2] }} {{ s[1] }} {% if s[4] %}({{ s[4] }}){% endif %}</option>
+                        {% endfor %}
+                    </select>
+                    <input name="reason" placeholder="Причина" size="50" required>
+                    <button type="submit">➕ Объявить выговор</button>
+                </form>
+            </div>
+            {% endif %}
+            
+            <div style="overflow-x:auto">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Боец</th>
+                            <th>Позывной</th>
+                            <th>Отделение</th>
+                            <th>Причина</th>
+                            <th>Кто объявил</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in reprimands %}
+                        <tr>
+                            <td>{{ r[2] }}</td>
+                            <td>{% if can_view_all %}{{ r[8] }} {{ r[7] }}{% else %}{{ session.user_name }}{% endif %}</td>
+                            <td>{% if can_view_all %}{{ r[11] }}{% endif %}</td>
+                            <td>{% if can_view_all %}{{ r[9] }}{% endif %}</td>
+                            <td>{{ r[3] }}</td>
+                            <td>{{ r[4] }}</td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="6" class="empty">✅ Нет выговоров</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

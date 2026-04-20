@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль | ФЕНИКС</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background-image: url('/static/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height:100vh;
+            padding:20px;
+            position:relative;
+        }
+        body::before{
+            content:'';
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:rgba(0,0,0,0.65);
+            z-index:0;
+        }
+        .container{max-width:800px;margin:0 auto;position:relative;z-index:1}
+        .nav{background:rgba(20,25,40,0.9);padding:12px 20px;border-radius:60px;margin-bottom:20px;display:flex;gap:10px}
+        .nav a{color:#d0d0e0;text-decoration:none;padding:6px 16px;border-radius:30px}
+        .nav a:hover{background:#ff8c00;color:#0a0f1a}
+        .card{background:rgba(20,25,40,0.95);border-radius:20px;padding:25px;border:1px solid rgba(255,140,0,0.2);backdrop-filter:blur(5px)}
+        h2{color:#ff8c00;margin-bottom:20px}
+        h3{color:#ffaa44;margin:25px 0 15px}
+        .info{background:rgba(255,140,0,0.1);padding:15px;border-radius:12px;margin-bottom:20px}
+        .info p{margin:8px 0;color:#d0d0e0}
+        table{width:100%;border-collapse:collapse}
+        th{background:rgba(255,140,0,0.15);color:#ff8c00;padding:10px;text-align:left}
+        td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.05);color:#d0d0e0}
+        .avatar-profile{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #ff8c00;margin-bottom:15px}
+        .avatar-container{text-align:center}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/chat">💬 Чат</a>
+            <a href="/reprimands">⚠️ Выговоры</a>
+            <a href="/lateness">⏰ Опоздания</a>
+            <a href="/flag_duty">🎌 Флаг</a>
+            <a href="/schedule">📚 Занятия</a>
+            <a href="/profile">👤 Профиль</a>
+            <a href="/logout">🚪 Выход</a>
+        </div>
+        <div class="card">
+            <h2>👤 Профиль бойца</h2>
+            <div class="avatar-container">
+                <img src="{{ user[5] if user[5] else '/static/default-avatar.png' }}" class="avatar-profile" alt="avatar" onerror="this.src='/static/default-avatar.png'">
+            </div>
+            <div class="info">
+                <p><strong>ФИО:</strong> {{ user[0] }}</p>
+                <p><strong>Должность:</strong> {{ user[1] }}</p>
+                <p><strong>Отделение:</strong> {{ user[2] }}</p>
+                <p><strong>Позывной:</strong> {{ user[4] if user[4] else user[0] }}</p>
+            </div>
+            <h3>⚠️ Выговоры</h3>
+            <table><th>Дата</th><th>Причина</th><th>Кто объявил</th></table>
+            <tbody>{% for r in reprimands %}<tr><td>{{ r[0] }}</td><td>{{ r[1] }}</td><td>{{ r[2] }}</td></tr>{% else %}<tr><td colspan="3">Нет выговоров</td>{% endfor %}</tbody>
+            </table>
+            <h3>⏰ Опоздания</h3>
+            <table><th>Дата</th><th>Минут</th><th>Причина</th></tr>
+            <tbody>{% for l in lateness %}<tr><td>{{ l[0] }}</td><td>{{ l[1] }}</td><td>{{ l[2] }}</td></tr>{% else %}<tr><td colspan="3">Нет опозданий</td>{% endfor %}</tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
