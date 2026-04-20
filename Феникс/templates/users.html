@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление | ФЕНИКС</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background-image: url('/static/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height:100vh;
+            padding:20px;
+            position:relative;
+        }
+        body::before{
+            content:'';
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:rgba(0,0,0,0.65);
+            z-index:0;
+        }
+        .container{max-width:1400px;margin:0 auto;position:relative;z-index:1}
+        .nav{background:rgba(20,25,40,0.9);padding:12px 20px;border-radius:60px;margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap}
+        .nav a{color:#d0d0e0;text-decoration:none;padding:6px 16px;border-radius:30px}
+        .nav a:hover{background:#ff8c00;color:#0a0f1a}
+        .card{background:rgba(20,25,40,0.95);border-radius:20px;padding:25px;border:1px solid rgba(255,140,0,0.2);backdrop-filter:blur(5px)}
+        h2{color:#ff8c00;margin-bottom:20px}
+        .add-btn{background:linear-gradient(135deg,#ff8c00,#ff4500);color:white;padding:10px 20px;text-decoration:none;display:inline-block;margin-bottom:20px;border-radius:30px}
+        table{width:100%;border-collapse:collapse}
+        th{background:rgba(255,140,0,0.15);color:#ff8c00;padding:10px;text-align:left}
+        td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.05);color:#d0d0e0}
+        .perm-yes{color:#4ade80}.perm-no{color:#f87171}
+        .edit-btn{background:rgba(255,140,0,0.2);color:#ff8c00;padding:4px 12px;text-decoration:none;border-radius:20px}
+        .rank-badge{background:rgba(255,140,0,0.2);padding:2px 8px;border-radius:20px;font-size:11px}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/chat">💬 Чат</a>
+            <a href="/reprimands">⚠️ Выговоры</a>
+            <a href="/lateness">⏰ Опоздания</a>
+            <a href="/flag_duty">🎌 Флаг</a>
+            <a href="/schedule">📚 Занятия</a>
+            <a href="/profile">👤 Профиль</a>
+            <a href="/users">👥 Управление</a>
+            <a href="/change_unit">🔄 Отделение</a>
+            <a href="/logout">🚪 Выход</a>
+        </div>
+        <div class="card">
+            <h2>👥 Управление личным составом</h2>
+            <a href="/add_user" class="add-btn">➕ Добавить пользователя</a>
+            <div style="overflow-x:auto">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Логин</th>
+                            <th>ФИО</th>
+                            <th>Позывной</th>
+                            <th>Должность</th>
+                            <th>Отд.</th>
+                            <th>💬</th><th>👁️</th><th>⚡</th><th>⏰</th>
+                            <th>👑</th><th>🔄</th><th>🎌</th><th>📚</th><th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <td>{{ u[1] }}</td>
+                            <td><a href="/user_profile/{{ u[0] }}" style="color:#ffaa44">{{ u[2] }}</a></td>
+                            <td><span class="rank-badge">{{ u[6] if u[6] else '—' }}</span></td>
+                            <td><span class="rank-badge">
+                                {% if u[3]=='Руководитель' %}👑{% elif u[3]=='Начальник штаба' %}⭐{% elif u[3]=='Командир отряда' %}🎖️{% elif u[3]=='Командир отделения' %}📌{% else %}🪖{% endif %} {{ u[3] }}
+                            </span></td>
+                            <td>{% if u[4]=='Без отделения' %}🚫{% else %}{{ u[4] }}{% endif %}</td>
+                            <td class="{% if u[8] %}perm-yes{% else %}perm-no{% endif %}">{% if u[8] %}✅{% else %}❌{% endif %}</td>
+                            <td class="{% if u[9] %}perm-yes{% else %}perm-no{% endif %}">{% if u[9] %}✅{% else %}❌{% endif %}</td>
+                            <td class="{% if u[10] %}perm-yes{% else %}perm-no{% endif %}">{% if u[10] %}✅{% else %}❌{% endif %}</td>
+                            <td class="{% if u[11] %}perm-yes{% else %}perm-no{% endif %}">{% if u[11] %}✅{% else %}❌{% endif %}</td>
+                            <td class="{% if u[12] %}perm-yes{% else %}perm-no{% endif %}">{% if u[12] %}✅{% else %}❌{% endif %}</td>
+                            <td class="{% if u[13] %}perm-yes{% else %}perm-no{% endif %}">{% if u[13] %}✅{% else %}❌{% endif %}</td>
+                            <td class="{% if u[14] %}perm-yes{% else %}perm-no{% endif %}">{% if u[14] %}✅{% else %}❌{% endif %}</td>
+                            <td class="{% if u[15] %}perm-yes{% else %}perm-no{% endif %}">{% if u[15] %}✅{% else %}❌{% endif %}</td>
+                            <td><a href="/edit_user/{{ u[0] }}" class="edit-btn">✏️</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
